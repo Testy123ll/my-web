@@ -1,95 +1,97 @@
-// server.js
+// api/send-email.js
 
-import express from 'express';
 import nodemailer from 'nodemailer';
-import cors from 'cors'; // <-- 1. Import the CORS package
-import 'dotenv/config';
+import cors from 'cors';
+// No need for 'dotenv/config' here; Vercel handles environment variables automatically
 
-const app = express();
-const PORT = process.env.PORT || 3000; 
-
-// --- CORS CONFIGURATION ---
-// Define allowed origins. Crucially, you must include your Vercel frontend URL.
+// --- 1. CORS Setup ---
+// Middleware to explicitly handle CORS for the Vercel frontend.
 const corsOptions = {
-    origin: 'https://codesavvy.vercel.app', // <-- YOUR LIVE VERCEL FRONTEND URL
-    methods: ['GET', 'POST'], // Allow POST method for form submission
+    origin: 'https://codesavvy.vercel.app', // MUST be your exact Vercel frontend URL
+    methods: ['POST', 'OPTIONS'], // Allow POST and preflight OPTIONS
     allowedHeaders: ['Content-Type'],
-    exposedHeaders: ['Content-Type'],
-    preflightContinue: true // Helpful for preflight checks
 };
 
-// Apply CORS middleware using the configuration
-app.use(cors(corsOptions)); 
-// --- END CORS CONFIGURATION ---
+const corsMiddleware = cors(corsOptions);
 
-
-//// In server.js (Replace the current transporter setup)
-
+// --- 2. SendGrid Transporter Configuration ---
 const transporter = nodemailer.createTransport({
-    // Explicitly set the SendGrid host to prevent defaulting to 127.0.0.1
     host: 'smtp.sendgrid.net', 
-    
-    // Explicitly set the standard port for SendGrid (usually 587 or 25)
-    port: 587, 
-    
-    // Set secure to false and requireTLS to true for port 587 (STARTTLS)
-    secure: false,     
-    requireTLS: true,
-    
+    port: 587,                  
+    secure: false,              
+    requireTLS: true,           
     auth: {
-        // user should be 'apikey' and pass should be the API Key
         user: 'apikey', 
+        // Vercel loads this from your Environment Variables
         pass: process.env.SENDGRID_API_KEY, 
     },
 });
 
-// Remove 'service: sendgrid' as we are defining host/port manually
-// ...
 
-// Middleware to parse JSON body data from the frontend
-app.use(express.json()); 
+// --- 3. Main Exported Handler Function ---
+export default async function handler(req, res) {
+    // Run CORS middleware to handle preflight requests and set headers
+    await new Promise((resolve, reject) => {
+        corsMiddleware(req, res, (result) => {
+            if (result instanceof Error) {
+                return reject(result);
+            }
+            return resolve(result);
+        });
+    });
 
-// ==========================================================
-// 3. EMAIL SENDING LOGIC (Must be *after* app.use(express.json()))
-// ==========================================================
+    // Handle the CORS preflight request (OPTIONS method)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
-app.post('/send-email', async (req, res) => {
-    // ... (Your request body destructuring) ...
+    // Ensure the request method is POST
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Method Not Allowed' });
+    }
+
+    // Process the JSON body
     const { name, email, subject, message } = req.body;
+    
+    // CRITICAL: Must be a SendGrid verified sender
+    const verifiedSenderEmail = 'hojoisaac85@gmail.com'; 
+    // CRITICAL: The email address where you want to receive the form data
+    const recipientEmail = 'recipient_email@example.com'; 
 
-    // ... (Your mailOptions setup) ...
+    if (!name || !email || !message) {
+        return res.status(400).json({ success: false, message: 'Missing required fields.' });
+    }
+
     const mailOptions = {
-        from: `"Ojo Isaac Testimony" <hojoisaac85@gmail.com>`, 
-        to: 'recipient_email@example.com', // <-- MAKE SURE THIS IS SET CORRECTLY!
-        subject: `Contact Form Submission: ${subject}`,
-        html: `<p>Name: ${name}</p><p>Email: ${email}</p><p>Message: ${message}</p>`,
+        from: `"Contact Form Submission" <${verifiedSenderEmail}>`, 
+        to: recipientEmail, 
+        replyTo: email, // Set the submitter's email as the reply-to address
+        subject: `Contact Form: ${subject}`,
+        html: `
+            <h3>New Contact Form Submission</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <hr>
+            <p><strong>Message:</strong></p>
+            <p>${message.replace(/\n/g, '<br>')}</p>
+        `,
     };
-
-    // --- Execution ---
+    
+    // Send Email
     try {
         const info = await transporter.sendMail(mailOptions);
         
-        console.log("Received contact form submission:", req.body);
         console.log("Email sent successfully:", info.messageId);
         
-        // Respond to the frontend successfully
-        res.status(200).json({ success: true, message: 'Email sent successfully!' });
+        return res.status(200).json({ success: true, message: 'Message sent successfully!' });
         
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("Error sending email:", error.message);
         
-        // IMPORTANT: When a backend error happens, we send a 500 status
-        res.status(500).json({ 
+        return res.status(500).json({ 
             success: false, 
-            message: 'Failed to send message due to server error.'
+            message: 'Failed to send message due to a server error. Check logs for details.'
         });
     }
-});
-
-// ==========================================================
-// 4. START SERVER
-// ==========================================================
-
-app.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
-});
+}

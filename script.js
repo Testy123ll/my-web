@@ -127,21 +127,22 @@ form.addEventListener('submit', (e) => {
 // ==========================================================
 // script.js
 
+// script.js
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // CRITICAL: Replace 'YOUR-RENDER-BACKEND-URL' with the actual live URL 
-    const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email'; 
+    // CRITICAL: This now points to your Vercel Serverless Function endpoint
+    const BACKEND_URL = 'https://codesavvy.vercel.app/api/send-email'; 
 
     // ==========================================================
     // 2. DOM ELEMENTS
-    // All IDs here now match the corrected index.html IDs
     // ==========================================================
     const contactForm = document.getElementById('contacts-form');
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const subjectInput = document.getElementById('subject');
     const messageInput = document.getElementById('message');
-    const statusMessage = document.getElementById('form-status'); // UNCOMMENTED and matching HTML
+    const statusMessage = document.getElementById('form-status'); 
 
     // ==========================================================
     // 3. EVENT LISTENER
@@ -158,16 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================
 
     async function handleFormSubmit(event) {
-        // Prevent the default form submission behavior (page reload)
         event.preventDefault(); 
         
-        // Clear previous status message and show 'Sending...'
         if (statusMessage) {
             statusMessage.textContent = 'Sending...';
             statusMessage.style.color = 'orange';
         }
 
-        // Line 168 (now fixed, as all inputs are correctly selected)
         const formData = {
             name: nameInput.value,
             email: emailInput.value,
@@ -179,36 +177,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(BACKEND_URL, {
                 method: 'POST',
                 
-                // CRITICAL HEADER: Tells the backend the data is JSON
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 
-                // Convert JavaScript object to JSON string for the body
                 body: JSON.stringify(formData), 
             });
 
-            const data = await response.json();
-
-            // Handle success (HTTP 200) or server-side error (HTTP 500)
-            if (response.ok && data.success) {
-                if (statusMessage) {
-                    statusMessage.textContent = 'Message sent successfully!';
-                    statusMessage.style.color = 'green';
+            // Use response.ok (status 200-299) for success check
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (statusMessage) {
+                        statusMessage.textContent = 'Message sent successfully! Thank you.';
+                        statusMessage.style.color = 'green';
+                    }
+                    contactForm.reset(); 
+                } else {
+                    // Handle server-side errors (like missing fields or SendGrid auth failure)
+                    if (statusMessage) {
+                        statusMessage.textContent = `Error: ${data.message || 'Failed to send message.'}`;
+                        statusMessage.style.color = 'red';
+                    }
                 }
-                contactForm.reset(); // Clear the form on success
             } else {
-                // Handle specific server-side errors (e.g., missing field validation from server.js)
-                if (statusMessage) {
-                    statusMessage.textContent = `Error: ${data.message || 'Failed to send message.'}`;
-                    statusMessage.style.color = 'red';
-                }
+                // Handle non-OK responses (like 404 or 500 status codes)
+                throw new Error(`HTTP Error: ${response.status}`);
             }
+
         } catch (error) {
-            // Handle network errors (e.g., server offline, CORS block, wrong URL)
             console.error('Fetch Error:', error);
             if (statusMessage) {
-                statusMessage.textContent = 'Network error. Please try again later.';
+                statusMessage.textContent = 'Network or server error. Please try again later.';
                 statusMessage.style.color = 'red';
             }
         }
