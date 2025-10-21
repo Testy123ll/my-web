@@ -122,64 +122,88 @@ form.addEventListener('submit', (e) => {
 });
 
 
-// --- Contact Form Submission Handler ---
-document.addEventListener('DOMContentLoaded', () => {
-    const contactForm = document.getElementById('contactForm');
-    const formMessage = document.getElementById('form-message');
+/// ==========================================================
+// 1. CONFIGURATION
+// ==========================================================
 
-    // This is the URL where your Node.js server is running
-    // If you deploy your backend, you'll change 'localhost:3000' to your domain/IP
-   // Make sure this is exactly correct and check for typos!
-    const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email';
+// CRITICAL: Replace 'YOUR-RENDER-BACKEND-URL' with the actual live URL 
+// provided by Render, including the /send-email endpoint.
+const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email'; 
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Stop the default form submission (page reload)
+// ==========================================================
+// 2. DOM ELEMENTS
+// ==========================================================
+const contactForm = document.getElementById('contact-form');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const subjectInput = document.getElementById('subject');
+const messageInput = document.getElementById('message');
+const statusMessage = document.getElementById('form-status'); // Assuming you have an element to display feedback
 
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
-            const submitButton = contactForm.querySelector('.send-button');
+// ==========================================================
+// 3. EVENT LISTENER
+// ==========================================================
 
-            // 1. Show Loading State
-            submitButton.textContent = 'Sending...';
-            submitButton.disabled = true;
-            formMessage.textContent = ''; // Clear previous messages
-            formMessage.style.color = 'black';
+if (contactForm) {
+    contactForm.addEventListener('submit', handleFormSubmit);
+}
 
-            try {
-                // 2. Send data to the backend API
-                const response = await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json', // Tell the server we are sending JSON
-                    },
-                    body: JSON.stringify(data), // Convert JS object to JSON string
-                });
+// ==========================================================
+// 4. HANDLER FUNCTION
+// ==========================================================
 
-                const result = await response.json();
-
-                // 3. Handle response
-                if (result.success) {
-                    formMessage.textContent = result.message;
-                    formMessage.style.color = 'green';
-                    contactForm.reset(); // Clear the form on success
-                } else {
-                    formMessage.textContent = result.message || 'An unknown error occurred.';
-                    formMessage.style.color = 'red';
-                }
-
-            } catch (error) {
-                console.error('Submission Error:', error);
-                formMessage.textContent = 'Network error. Please check the server connection.';
-                formMessage.style.color = 'red';
-            } finally {
-                // 4. Reset button state
-                submitButton.textContent = 'Send Message';
-                submitButton.disabled = false;
-            }
-        });
+async function handleFormSubmit(event) {
+    // Prevent the default form submission behavior (page reload)
+    event.preventDefault(); 
+    
+    // Clear previous status message
+    if (statusMessage) {
+        statusMessage.textContent = 'Sending...';
+        statusMessage.style.color = 'orange';
     }
 
-    // You can also place your other frontend JavaScript code here (like the mobile menu toggle, FAQ accordion, etc.)
-    // ...
-});
+    const formData = {
+        name: nameInput.value,
+        email: emailInput.value,
+        subject: subjectInput.value,
+        message: messageInput.value,
+    };
+
+    try {
+        const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            
+            // CRITICAL HEADER: Tells the backend the data is JSON
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+            // Convert JavaScript object to JSON string for the body
+            body: JSON.stringify(formData), 
+        });
+
+        const data = await response.json();
+
+        // Handle success (HTTP 200) or server-side error (HTTP 500)
+        if (response.ok && data.success) {
+            if (statusMessage) {
+                statusMessage.textContent = 'Message sent successfully!';
+                statusMessage.style.color = 'green';
+            }
+            contactForm.reset(); // Clear the form on success
+        } else {
+            // Handle specific server-side errors (e.g., missing field validation from server.js)
+            if (statusMessage) {
+                statusMessage.textContent = `Error: ${data.message || 'Failed to send message.'}`;
+                statusMessage.style.color = 'red';
+            }
+        }
+    } catch (error) {
+        // Handle network errors (e.g., server offline, CORS block, wrong URL)
+        console.error('Fetch Error:', error);
+        if (statusMessage) {
+            statusMessage.textContent = 'Network error. Please try again later.';
+            statusMessage.style.color = 'red';
+        }
+    }
+}
