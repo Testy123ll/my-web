@@ -22,21 +22,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // --- Nodemailer Transporter Setup ---
 // This configures the service that will send the email (Gmail)
 const transporter = nodemailer.createTransport({
-    // Use the explicit host for better reliability on cloud platforms
-    host: "smtp.gmail.com", 
-    
-    // Switch to port 587 for TLS
-    port: 587,         
-    
-    // Must be false for port 587
-    secure: false,     
-    
-    // Explicitly require TLS encryption on port 587
-    requireTLS: true,  
-    
+    host: "smtp.gmail.com",
+    port: 465,         // Use port 465 for secure SSL connection
+    secure: true,      // Must be true for port 465
     auth: {
-        // NOTE: Ensure your Render Environment Variables are named GMAIL_USER and GMAIL_PASS
-        // If they are named EMAIL_USER and EMAIL_PASS, use those names here:
         user: process.env.EMAIL_USER, 
         pass: process.env.EMAIL_PASS, 
     },
