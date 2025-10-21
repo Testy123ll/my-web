@@ -21,13 +21,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // --- Nodemailer Transporter Setup ---
 // This configures the service that will send the email (Gmail)
+c// In server.js
+
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,         // Use port 465 for secure SSL connection
-    secure: true,      // Must be true for port 465
+    host: 'smtp.ethereal.email', // Ethereal Host
+    port: 587,                  // Standard port for Ethereal/TLS
+    secure: false,              // Use false for port 587
+    requireTLS: true,           // Ensure TLS encryption is used
     auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS, 
+        user: process.env.ETHEREAL_USER, // The Ethereal username you copied
+        pass: process.env.ETHEREAL_PASS, // The Ethereal password you copied
     },
 });
 
