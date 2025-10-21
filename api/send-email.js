@@ -2,13 +2,11 @@
 
 import nodemailer from 'nodemailer';
 import cors from 'cors';
-// No need for 'dotenv/config' here; Vercel handles environment variables automatically
 
 // --- 1. CORS Setup ---
-// Middleware to explicitly handle CORS for the Vercel frontend.
 const corsOptions = {
     origin: 'https://codesavvy.vercel.app', // MUST be your exact Vercel frontend URL
-    methods: ['POST', 'OPTIONS'], // Allow POST and preflight OPTIONS
+    methods: ['POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
 };
 
@@ -56,11 +54,15 @@ export default async function handler(req, res) {
     // CRITICAL: Must be a SendGrid verified sender
     const verifiedSenderEmail = 'hojoisaac85@gmail.com'; 
     // CRITICAL: The email address where you want to receive the form data
-    const recipientEmail = 'recipient_email@example.com'; 
+    const recipientEmail = 'testimonyojo86@gmail.com'; // <-- UPDATE THIS TO YOUR INBOX!
 
     if (!name || !email || !message) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
+
+    // --- DEBUGGING LINE ADDED HERE ---
+    console.log(`SENDGRID_API_KEY loaded? ${process.env.SENDGRID_API_KEY ? 'YES (Length: ' + process.env.SENDGRID_API_KEY.length + ')' : 'NO/UNDEFINED'}`);
+    // ---------------------------------
 
     const mailOptions = {
         from: `"Contact Form Submission" <${verifiedSenderEmail}>`, 
@@ -87,6 +89,7 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, message: 'Message sent successfully!' });
         
     } catch (error) {
+        // This is where the previous "Missing credentials" error was caught
         console.error("Error sending email:", error.message);
         
         return res.status(500).json({ 
