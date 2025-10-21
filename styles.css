@@ -1,0 +1,1049 @@
+/* --- 1. GLOBAL & RESET STYLES --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; /* Fallback for a clean look */
+    line-height: 1.6;
+    color: #333; /* Dark text color */
+}
+
+/* Base Styles for Containers and Titles */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.section-title {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+section {
+    padding: 80px 0;
+}
+/* Ensure dark sections have white text */
+.hero-section, .main-nav, .contact-section, .site-footer {
+    color: #fff;
+    background-color: #333; /* Dark background */
+}
+
+/* --- 2. NAVIGATION --- */
+.main-nav {
+    background-color: #fff;
+    padding: 15px 0;
+    top: 0;
+    z-index: 1000;
+    position: sticky;   
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+}
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin: 10px;
+}
+#logo{
+    color: #00aaff;
+}
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+.nav-links li a {
+    text-decoration: none;
+    color: #333;
+    padding: 0 15px;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+.nav-links li a:hover {
+    color: #007bff; /* Accent color */
+}
+/* ====================================
+   2. NAVIGATION (REVISED)
+   ==================================== */
+
+/* Base styles for the toggle button (always hidden on large screens) */
+.menu-toggle {
+    display: none; /* Hidden by default */
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--color-dark);
+    padding: 0 15px;
+    line-height: 1;
+}
+
+/* Mobile Navigation Breakpoint */
+@media (max-width: 768px) {
+    
+    /* 1. Show the hamburger menu icon */
+    .menu-toggle {
+        display: block; 
+    }
+    
+    /* 2. Hide the desktop links and prepare them for mobile display */
+    .nav-links {
+        display: none; /* Initially hidden on mobile */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* Position below the nav bar */
+        left: 0;
+        background-color: var(--color-white);
+        border-top: 1px solid #eee;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        /* Ensures the links transition smoothly when open */
+        transition: max-height 0.3s ease-out;
+        max-height: 0; 
+    }
+
+    /* 3. The class added by JavaScript to open the menu */
+    .nav-links.open {
+        display: flex; /* Override 'display: none' */
+        max-height: 500px; /* Use a large max-height for smooth transition */
+    }
+
+    /* 4. Center and space out the links */
+    .nav-links li {
+        text-align: center;
+        margin: 10px 0;
+    }
+    .nav-links li a {
+        display: block;
+        padding: 10px 0;
+        color: var(--color-text-dark);
+    }
+}
+
+/* --- 3. HERO SECTION --- */
+/* --- 3. HERO SECTION --- */
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(-45deg, #001f3f, #004080, #007bff, #00aaff);
+  background-size: 400% 400%;
+  animation: gradientFlow 15s ease infinite;
+}
+
+/* Background Gradient Flow */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating Text Animation */
+.hero-content {
+  max-width: 700px;
+  padding: 2rem;
+  z-index: 2;
+  animation: floatText 5s ease-in-out infinite;
+}
+
+@keyframes floatText {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(0, 183, 255, 0.8), 0 0 20px rgba(0, 183, 255, 0.6);
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #e0f7ff;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background: #00aaff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.6);
+}
+
+.btn-primary:hover {
+  background: #007bff;
+  box-shadow: 0 0 20px rgba(0, 183, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+/* Glowing Pulse */
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(0, 183, 255, 0.8), 0 0 20px rgba(0, 183, 255, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 183, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(0, 183, 255, 0.8), 0 0 20px rgba(0, 183, 255, 0.6);
+  }
+}
+
+/* --- LIGHT BEAMS --- */
+.light-beam {
+  position: absolute;
+  top: -50%;
+  width: 2px;
+  height: 200%;
+  background: linear-gradient(to bottom, rgba(0, 200, 255, 0), rgba(0, 200, 255, 0.4), rgba(0, 200, 255, 0));
+  opacity: 0.6;
+  animation: beamMove 10s linear infinite;
+  filter: blur(2px);
+}
+
+/* Randomize beam positions and timings */
+.light-beam:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+.light-beam:nth-child(2) {
+  left: 50%;
+  animation-delay: 3s;
+}
+.light-beam:nth-child(3) {
+  left: 80%;
+  animation-delay: 6s;
+}
+
+/* Beams moving down slowly */
+@keyframes beamMove {
+  0% { transform: translateY(-100%); opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(100%); opacity: 0.4; }
+}
+
+/* --- 4. ABOUT SECTION --- */
+.about-content {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+.about-text, .skills {
+    flex: 1;
+}
+.howdy {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #444;
+}
+.cv-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+.cv-button:hover {
+    background-color: #007bff; /* Accent color */
+}
+
+/* SKILLS PROGRESS BARS */
+.skills{
+    margin-top: 40px;
+}
+.skill-item {
+    margin-bottom: 25px;
+    margin-top:25px ;
+}
+.skill-item p {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.progress-bar-container {
+    background-color: #eee;
+    height: 8px;
+    border-radius: 4px;
+}
+.progress-bar {
+    background-color: #000;
+    height: 100%;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 0.7em;
+    line-height: 8px;
+    color: #fff;
+    padding-right: 5px;
+    transition: width 0.5s ease; /* For a smooth animation */
+}
+/* Set widths based on percentage from the PDF */
+.design { width: 90%; }
+.html-css { width: 80%; }
+.wordpress { width: 95%; }
+
+/* EXPERIENCE TIMELINE REDESIGN (Side-by-Side) */
+
+.experience-title {
+    margin-top: 80px;
+    margin-bottom: 40px;
+}
+
+.timeline-container {
+    max-width: 1000px; /* Wider container for two columns */
+    margin: 0 auto;
+    position: relative;
+    padding: 0 10px;
+}
+
+/* The vertical timeline line (Centered) */
+.timeline-container::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    background-color: #eee; /* Light Gray */
+    top: 0;
+    bottom: 0;
+    left: 50%; /* Center the line */
+    margin-left: -1px;
+}
+
+.timeline-item {
+    position: relative;
+    padding: 10px 0 30px 0;
+    margin-bottom: 40px;
+    width: 48%; /* Each item takes slightly less than half the width */
+}
+
+/* Timeline Dot Styling */
+.timeline-dot {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 15px;
+    background-color: #fff; /* White center */
+    border: 3px solid #00aaff; /* Tech Accent Blue */
+    border-radius: 50%;
+    z-index: 10;
+}
+
+/* 1. Left Column Items (Odd Children: 1st, 3rd, etc.) */
+.timeline-item:nth-child(odd) {
+    left: 0;
+    padding-right: 50px;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot {
+    right: -10px; /* Position dot on the right edge of the left column */
+    left: auto;
+}
+.timeline-item:nth-child(odd) .timeline-content {
+    text-align: right;
+}
+
+/* 2. Right Column Items (Even Children: 2nd, 4th, etc.) */
+.timeline-item:nth-child(even) {
+    left: 52%; /* Push item past the center line */
+    padding-left: 50px;
+}
+.timeline-item:nth-child(even) .timeline-dot {
+    left: -10px; /* Position dot on the left edge of the right column */
+}
+.timeline-item:nth-child(even) .timeline-content {
+    text-align: left;
+}
+
+
+/* Content and Hover Styles */
+.timeline-content {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 5px;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.timeline-content:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-color: #00aaff; /* Tech Accent Blue */
+}
+
+.company-date {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 5px;
+}
+.job-title {
+    font-size: 1.3em;
+    margin: 0 0 10px 0;
+    color: #000; /* Black */
+}
+.job-description {
+    font-size: 0.9em;
+    color: #333; /* Dark Gray */
+}
+
+
+/* --- Mobile Responsiveness --- */
+
+/* Fallback to single column layout on smaller screens */
+@media (max-width: 800px) {
+    .timeline-container::after {
+        left: 20px; /* Move line to the left edge */
+    }
+
+    .timeline-item {
+        width: 100%; /* Full width */
+        left: 0 !important;
+        padding-left: 40px;
+        padding-right: 0;
+        margin-left: 0;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot,
+    .timeline-item:nth-child(even) .timeline-dot {
+        left: 14px; /* Align dot with the new line position */
+        right: auto;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        text-align: left; /* Ensure text is left-aligned on mobile */
+    }
+}
+
+/* --- 5. PORTFOLIO SECTION --- */
+.portfolio-section {
+    background-color: #fff; /* White background for the clean look */
+    text-align: center;
+    padding: 80px 0;
+}
+.portfolio-section .section-title {
+    color: #000;
+}
+
+/* Portfolio Filters Redesign */
+.portfolio-filters {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 25px; /* Increased gap */
+}
+.portfolio-filters a {
+    text-decoration: none;
+    color: #333;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 5px 10px;
+    transition: color 0.3s, border-color 0.3s;
+    position: relative;
+    /* Optional: Small line effect for non-active links */
+    display: inline-block;
+}
+.portfolio-filters a:hover,
+.portfolio-filters a.active {
+    color: #00aaff; /* Tech Accent Blue */
+    border-bottom: 2px solid #00aaff;
+    padding-bottom: 5px;
+}
+
+/* Dynamic Grid Layout (Masonry Style) */
+.portfolio-grid {
+    display: grid;
+    /* Define 3 equal columns */
+    grid-template-columns: repeat(3, 1fr);
+    /* Allow rows to size automatically based on content (key for masonry effect) */
+    grid-auto-rows: minmax(100px, auto); 
+    gap: 15px; /* Increased gap between items */
+    padding: 0 20px;
+}
+
+/* Span classes for visual variety (Based on the image names in your HTML) */
+.portfolio-item.is-wide {
+    grid-column: span 2;
+}
+.portfolio-item.is-tall {
+    grid-row: span 2; /* Make the item span two rows */
+}
+
+/* Portfolio Item Styling */
+.portfolio-item {
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background-color: #f8f8f8; /* Light background while loading images */
+    border-radius: 8px; /* Soft edges */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px); /* Start 20px below the final position */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Smooth transition */
+}
+.portfolio-item:hover {
+    transform: translateY(-5px); /* Lift on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Final state applied by JavaScript when item is visible */
+.portfolio-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+.portfolio-item img:hover {
+    transform: scale(1.03); /* Subtle zoom effect */
+}
+
+/* Project Label Overlay */
+.portfolio-item:before {
+    content: attr(data-category); 
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.8); /* Darker overlay for readability */
+    color: #fff;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 10;
+}
+.portfolio-item:hover:before {
+    opacity: 1; 
+}
+
+/* Filtering Class */
+.portfolio-item.hidden {
+    display: none !important;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+    }
+    .portfolio-item.is-wide {
+        grid-column: span 1; /* Turn off wide span on smaller screens */
+    }
+    .portfolio-item.is-tall {
+        grid-row: span 1; /* Turn off tall span on smaller screens */
+    }
+}
+@media (max-width: 576px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr; /* Single column on phones */
+        gap: 10px;
+    }
+}
+/* --- 6. SERVICES SECTION --- */
+.services-section {
+    background-color: #f8f8f8;
+}
+/* --- 6. SERVICES SECTION --- */
+
+.services-section {
+    background-color: var(--section-bg); /* Use theme variable */
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px; /* Increased gap for better separation */
+    text-align: center;
+}
+
+.service-item {
+    /* Base Card Styling */
+    padding: 30px 20px;
+    background-color: #f1e7e7; /* White/Light background */
+    border: 1px solid #e7e2e2;
+    border-radius: 8px; /* Soft edges */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    
+    /* Box shadow for depth */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
+}
+
+/* Hover Effect: Lift the card and change the border color to the accent */
+.service-item:hover {
+    transform: translateY(-8px); /* Lift effect */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    border-color: #00aaff; /* Tech Accent Border */
+}
+
+/* Icon/Number Styling */
+.service-icon {
+    font-size: 2.5em;
+    font-weight: 900;
+    margin-bottom: 15px;
+    color: #999; /* Subtle gray number */
+    transition: color 0.3s;
+}
+
+/* Change icon/number color on hover */
+.service-item:hover .service-icon {
+    color: #00aaff; /* Tech Accent Color */
+}
+
+.service-title {
+    text-transform: uppercase;
+    font-size: 1.1em;
+    color: var(--text-color-dark);
+    margin-top: 0;
+}
+
+.service-description {
+    font-size: 0.9em;
+    color: var(--text-color-light); /* Darker text for readability */
+}
+
+/* Ensure mobile responsiveness (Update the media query) */
+@media (max-width: 768px) {
+    /* ... existing styles ... */
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+    }
+}
+@media (max-width: 480px) {
+    .services-grid {
+        grid-template-columns: 1fr; /* 1 column on phones */
+    }
+}
+.service-title {
+    text-transform: uppercase;
+    font-size: 1.0em;
+    color: #000;
+}
+.service-description {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* --- 7. BLOG & TESTIMONIALS --- */
+.blog-section {
+  background: #f8fbff;
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: #003366;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.testimonial-container {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.testimonial {
+  display: none;
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+
+.testimonial.active {
+  display: block;
+  opacity: 1;
+}
+
+.testimonial-text {
+  font-size: 1.2rem;
+  color: #333;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.client-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 0.3rem;
+}
+
+.client-title {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Navigation buttons */
+.testimonial-nav {
+  margin-top: 2rem;
+}
+
+.nav-btn {
+  background: #007bff;
+  border: none;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  margin: 0 0.4rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.nav-btn:hover {
+  background: #00aaff;
+  transform: scale(1.1);
+}
+
+
+
+/* --- 7.5 FAQ SECTION --- */
+.faq-section {
+    background-color: #f8f8f8; /* Light background to contrast with contact */
+    padding: 80px 0;
+}
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.faq-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden; /* Important for clean hide/show transition */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 20px 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question:hover,
+.faq-question.active {
+    background-color: #f0f0f0;
+    color: #00aaff; /* Tech Accent Color */
+}
+
+/* Style for the answer content (Hidden by default) */
+.faq-answer {
+    padding: 0 25px;
+    max-height: 0; /* Hides the content by default */
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+.faq-answer p {
+    margin-top: 0;
+    padding-bottom: 20px;
+    line-height: 1.6;
+    color: #666;
+    /* Ensure the padding-bottom is added only when active */
+}
+
+/* Optional: Add a "+" and "-" icon indicator */
+.faq-question::after {
+    content: '+';
+    font-size: 1.5em;
+    font-weight: 300;
+    margin-left: 10px;
+}
+
+.faq-question.active::after {
+    content: '-';
+}
+/* --- 8. CONTACT SECTION & FOOTER --- */
+/* --- CONTACT SECTION WITH HERO THEME --- */
+.contact-section {
+    background: linear-gradient(-45deg, #001f3f, #004080, #007bff, #00aaff);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    color: #fff;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Floating Light Beams inside Contact Section */
+.contact-section .light-beam {
+    position: absolute;
+    top: -50%;
+    width: 2px;
+    height: 200%;
+    background: linear-gradient(to bottom, rgba(0, 200, 255, 0), rgba(0, 200, 255, 0.4), rgba(0, 200, 255, 0));
+    opacity: 0.6;
+    animation: beamMove 10s linear infinite;
+    filter: blur(2px);
+}
+
+.contact-section .light-beam:nth-child(1) {
+    left: 20%;
+    animation-delay: 0s;
+}
+.contact-section .light-beam:nth-child(2) {
+    left: 50%;
+    animation-delay: 3s;
+}
+.contact-section .light-beam:nth-child(3) {
+    left: 80%;
+    animation-delay: 6s;
+}
+
+/* Titles Glow like Hero Section */
+.contact-section .section-title {
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 183, 255, 0.8), 0 0 20px rgba(0, 183, 255, 0.6);
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* Subtitle / subtext */
+.contact-subtext {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #e0f7ff;
+    font-size: 1.1em;
+}
+
+/* Contact content flex container */
+.contact-content {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 2; /* Ensure content is above floating lights */
+}
+
+/* Contact Info Styling */
+.contact-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.info-item {
+    margin-bottom: 40px;
+    border-left: 3px solid rgba(0, 170, 255, 0.6); /* subtle accent line */
+    padding-left: 20px;
+    transition: border-color 0.3s;
+}
+
+.info-item:hover {
+    border-left-color: #fff;
+}
+
+.info-label {
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 5px;
+}
+
+.info-detail {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 0;
+}
+
+/* Contact Form Styling */
+.contact-form {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 18px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px solid #00aaff;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1em;
+    border-radius: 4px 4px 0 0;
+    transition: border-bottom-color 0.3s, background-color 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-bottom-color: #007bff;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+/* Send Button */
+.send-button {
+    background-color: #00aaff;
+    color: #fff;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1em;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    border-radius: 4px;
+}
+
+.send-button:hover {
+    background-color: #007bff;
+    box-shadow: 0 0 20px rgba(0, 183, 255, 0.9);
+    transform: translateY(-2px);
+}
+
+/* Social Links */
+.social-links {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 30px;
+}
+
+.social-link {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.social-link:hover {
+    color: #00aaff;
+}
+
+/* Footer styling */
+.site-footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #111;
+    color: #999;
+    font-size: 0.9em;
+    border-top: 1px solid #333;
+}
+
+.site-footer p {
+    margin: 0;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Responsive Contact Section */
+@media (max-width: 768px) {
+    .contact-content {
+        flex-direction: column;
+    }
+    .contact-info {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .info-item {
+        border-left: none;
+        padding-left: 0;
+        margin-bottom: 20px;
+    }
+    .info-detail {
+        font-size: 1.2em;
+    }
+    .contact-form {
+        width: 100%;
+    }
+}
+
+/* --- 9. RESPONSIVENESS (for smaller screens) --- */
+@media (max-width: 768px) {
+    .name {
+        font-size: 3em;
+    }
+    .about-content {
+        flex-direction: column;
+    }
+    .experience-grid {
+        grid-template-columns: 1fr;
+    }
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+    }
+    .portfolio-item.is-wide {
+        grid-column: span 1;
+    }
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+    .contact-content {
+        flex-direction: column;
+    }
+}
