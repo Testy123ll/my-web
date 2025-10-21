@@ -129,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // This is the URL where your Node.js server is running
     // If you deploy your backend, you'll change 'localhost:3000' to your domain/IP
-    const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email'; 
+   // Make sure this is exactly correct and check for typos!
+    const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email';
 
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
