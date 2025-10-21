@@ -1,96 +1,102 @@
-// Load environment variables from .env file
-require('dotenv').config(); 
+// 1. IMPORT NECESSARY MODULES (ES Module Syntax)
+import express from 'express';
+import nodemailer from 'nodemailer';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+// This line loads your .env file variables into process.env
+import 'dotenv/config'; 
 
-const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
-const cors = require('cors'); // To allow the frontend to communicate with the backend
-
+// --- Configuration Variables ---
 const app = express();
-const port = 3000; // The port the server will run on
+// Use the PORT provided by the hosting service (Render), or default to 3000 locally
+const PORT = process.env.PORT || 3000; 
 
-// Middleware
-// We need to allow requests from your frontend HTML page (CORS)
+// --- Middleware Setup ---
+// Allow the frontend (Vercel) to talk to the backend (Render)
 app.use(cors()); 
-// For parsing application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// For parsing application/json (though we'll send form data)
+// Parse incoming request bodies as JSON
 app.use(bodyParser.json()); 
+// Parse URL-encoded data (sometimes sent by forms)
+app.use(bodyParser.urlencoded({ extended: true })); 
 
-// --- Nodemailer Transporter Configuration ---
-// This is the object that knows how to send the email.
+// --- Nodemailer Transporter Setup ---
+// This configures the service that will send the email (Gmail)
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use 'gmail' for a Gmail account
+    // Use the explicit host for better reliability on cloud platforms
+    host: "smtp.gmail.com", 
+    
+    // Switch to port 587 for TLS
+    port: 587,         
+    
+    // Must be false for port 587
+    secure: false,     
+    
+    // Explicitly require TLS encryption on port 587
+    requireTLS: true,  
+    
     auth: {
-        user: process.env.EMAIL_USER, // Your sending email address (from .env)
-        pass: process.env.EMAIL_PASS, // Your App Password (from .env)
-    }
+        // NOTE: Ensure your Render Environment Variables are named GMAIL_USER and GMAIL_PASS
+        // If they are named EMAIL_USER and EMAIL_PASS, use those names here:
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS, 
+    },
 });
 
-// --- API Endpoint for Contact Form Submission ---
+// --- API Route: Handling Contact Form Submission ---
 app.post('/send-email', async (req, res) => {
-    console.log('Received contact form submission:', req.body);
-    
-    // Destructure data from the form
+    // Log the receipt of the request on the server (VERY IMPORTANT FOR DEBUGGING)
+    console.log('Received contact form submission:', req.body); 
+
     const { name, email, subject, message } = req.body;
 
-    // Basic validation
-    if (!name || !email || !subject || !message) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'Please fill in all fields.' 
-        });
+    if (!name || !email || !message) {
+        // Return a 400 Bad Request if required fields are missing
+        return res.status(400).json({ success: false, message: 'Missing required fields: name, email, or message.' });
     }
-
+    
     // Construct the email content
     const mailOptions = {
-        from: `"${name}" <${email}>`, // Sender is the user who filled the form
-        to: process.env.RECEIVING_EMAIL, // Your professional email to receive the message
-        subject: `[New Contact] ${subject}`,
-        text: `You have received a new message from your portfolio contact form.
-
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
-Message:
----
-${message}
----
-`,
+        from: process.env.EMAIL_USER, // Sender (your Gmail address)
+        to: process.env.RECEIVING_EMAIL, // Recipient (where you want to get the emails)
+        subject: `Contact Form Submission: ${subject || 'No Subject'}`,
         html: `
-            <p>You have received a new message from your portfolio contact form.</p>
-            <h3>Contact Details:</h3>
-            <ul>
-                <li><strong>Name:</strong> ${name}</li>
-                <li><strong>Email:</strong> ${email}</li>
-                <li><strong>Subject:</strong> ${subject}</li>
-            </ul>
-            <h3>Message:</h3>
-            <p>${message}</p>
-        `
+            <p><strong>From:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <hr>
+            <p><strong>Message:</strong></p>
+            <p>${message.replace(/\n/g, '<br>')}</p>
+        `,
     };
 
     try {
-        const info = await transporter.sendMail(mailOptions);
+        // Attempt to send the email
+        let info = await transporter.sendMail(mailOptions);
         console.log('Message sent: %s', info.messageId);
         
-        // Success response
-        res.status(200).json({ 
-            success: true, 
-            message: 'Message sent successfully! I will get back to you shortly.' 
-        });
+        // Success response to the frontend
+        res.status(200).json({ success: true, message: 'Email sent successfully!' });
+
     } catch (error) {
-        console.error('Error sending email:', error);
-        
-        // Error response
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to send message. Please try again or email directly.' 
-        });
+        // Log the actual error on the server
+        console.error('Nodemailer Error:', error.message);
+
+        // If Nodemailer fails (e.g., 401/AUTH error), send a generic 500 response to the frontend
+        res.status(500).json({ success: false, message: 'Failed to send email due to server error.' });
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server listening on http://localhost:${port}`);
+
+// --- Fallback Route for general requests ---
+app.get('/', (req, res) => {
+    res.send('Backend server is running.');
+});
+// --- Fallback Route for general requests ---
+app.get('/', (req, res) => {
+    // Send a friendly message confirming the server is operational
+    res.send('Backend server is running and ready to handle POST /send-email requests.');
+});
+
+// --- Start the Server ---
+app.listen(PORT, () => {
+    console.log(`Server listening on http://localhost:${PORT}`);
 });
