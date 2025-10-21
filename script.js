@@ -133,7 +133,7 @@ const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email';
 // ==========================================================
 // 2. DOM ELEMENTS
 // ==========================================================
-const contactForm = document.getElementById('contact');
+const contactForm = document.getElementById('contacts-form');
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const subjectInput = document.getElementById('subject');
