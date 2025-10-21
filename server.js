@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // --- Nodemailer Transporter Setup ---
 // This configures the service that will send the email (Gmail)
-c// In server.js
+// In server.js
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email', // Ethereal Host
