@@ -125,7 +125,7 @@ form.addEventListener('submit', (e) => {
 /// ==========================================================
 // 1. CONFIGURATION
 // ==========================================================
-
+document.addEventListener('DOMContentLoaded', () => {
 // CRITICAL: Replace 'YOUR-RENDER-BACKEND-URL' with the actual live URL 
 // provided by Render, including the /send-email endpoint.
 const BACKEND_URL = 'https://codesavvy-hx46.onrender.com/send-email'; 
@@ -138,7 +138,7 @@ const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const subjectInput = document.getElementById('subject');
 const messageInput = document.getElementById('message');
-const statusMessage = document.getElementById('form-status'); // Assuming you have an element to display feedback
+//const statusMessage = document.getElementById('form-status'); // Assuming you have an element to display feedback
 
 // ==========================================================
 // 3. EVENT LISTENER
@@ -147,6 +147,9 @@ const statusMessage = document.getElementById('form-status'); // Assuming you ha
 if (contactForm) {
     contactForm.addEventListener('submit', handleFormSubmit);
 }
+ else {
+        console.error("CRITICAL: The contact form element was not found!");
+    }
 
 // ==========================================================
 // 4. HANDLER FUNCTION
@@ -157,10 +160,10 @@ async function handleFormSubmit(event) {
     event.preventDefault(); 
     
     // Clear previous status message
-    if (statusMessage) {
-        statusMessage.textContent = 'Sending...';
-        statusMessage.style.color = 'orange';
-    }
+    //if (statusMessage) {
+   //     statusMessage.textContent = 'Sending...';
+   //     statusMessage.style.color = 'orange';
+  //  }
 
     const formData = {
         name: nameInput.value,
@@ -207,3 +210,4 @@ async function handleFormSubmit(event) {
         }
     }
 }
+});
