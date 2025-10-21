@@ -23,10 +23,27 @@ app.use(cors(corsOptions));
 // --- END CORS CONFIGURATION ---
 
 
-// ... (Your SendGrid transporter setup goes here) ...
+//// In server.js (Replace the current transporter setup)
+
 const transporter = nodemailer.createTransport({
-    // ... Your SendGrid config ...
+    // Explicitly set the SendGrid host to prevent defaulting to 127.0.0.1
+    host: 'smtp.sendgrid.net', 
+    
+    // Explicitly set the standard port for SendGrid (usually 587 or 25)
+    port: 587, 
+    
+    // Set secure to false and requireTLS to true for port 587 (STARTTLS)
+    secure: false,     
+    requireTLS: true,
+    
+    auth: {
+        // user should be 'apikey' and pass should be the API Key
+        user: 'apikey', 
+        pass: process.env.SENDGRID_API_KEY, 
+    },
 });
+
+// Remove 'service: sendgrid' as we are defining host/port manually
 // ...
 
 // Middleware to parse JSON body data from the frontend
